@@ -3,13 +3,15 @@ const client_id = process.env.client_id
 const client_secret = process.env.client_secret
 const redirect_uri = process.env.redirect_uri
 
+const { default: axios } = require('axios')
 const querystring = require('querystring')
 const randomstring = require('randomstring')
 
+const Authorization = 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
 
 const login = async (req, res) => {
   const state = randomstring.generate(16);
-  console.log(requestAccess);
+  //console.log(requestAccess);
   await res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -20,37 +22,53 @@ const login = async (req, res) => {
 }
 
 const requestAccess = async (req, res) => {
-  let code = req.query.code || null
-  let state = req.query.state || null
-
-  if (state === null) {
-    res.redirect('/auth' +
-      querystring.stringify({
-        error: 'state_mismatch'
-      })
-    );
-  }
-  else{
-    const authOption = {
+  const authOptions = {
       method: 'POST',
-      url: 'https://accounts.spotify.com/api/token', 
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 
+        'Authorization': Authorization ,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
       form: {
         code: code,
         redirect_uri: redirect_uri,
         grant_type: 'authorization_code'
       },
-      headers:{
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
       json: true
-      //.then(console.log(res.access_token))
-    }
-  }
+    };
+  
+    axios(authOptions)
+    .then((data) => {
+      return access_token.save()
+    })
+    .catch((err ) => {return err})
 }
 
+const refreshAccess = async (req, res) => {
+  const authOptions = {
+      method: 'POST',
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 
+        'Authorization': Authorization ,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      },
+      json: true
+    };
+  
+    axios(authOptions)
+    .then((data) => {
+      return access_token.save()
+    })
+    .catch((err ) => {return err})
+}
+
+
 const auth = async (req, res) => {
-  if (req.token) {
+  if (req.access_token) {
     res.redirect('http://localhost:3000')
   } else {
     res.redirect('http://localhost:3001/spotify/v1/login')
