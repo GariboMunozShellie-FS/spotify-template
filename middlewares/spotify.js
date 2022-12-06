@@ -6,9 +6,9 @@ const spotifyCtrl = require('../contorllers/spotify')
 //----------------------------------------------------
 
 spotify.get('/login', spotifyCtrl.login)
-spotify.get('/auth', spotifyCtrl.jwt, spotifyCtrl.auth)
-//spotify.get('/token', spotifyCtrl.jwt, spotifyCtrl.status)
-//spotify.get('/status', spotifyCtrl.jwt, spotifyCtrl.status)
-//spotify.get('/search', spotifyCtrl.jwt, spotifyCtrl.search)
+spotify.get('/auth', spotifyCtrl.auth)
+// spotify.get('/token', spotifyCtrl.jwt, spotifyCtrl.status)
+// spotify.get('/status', spotifyCtrl.jwt, spotifyCtrl.status)
+// spotify.get('/search', spotifyCtrl.jwt, spotifyCtrl.search)
 
 module.exports = spotify

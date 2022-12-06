@@ -4,15 +4,15 @@ const client_secret = process.env.client_secret
 const redirect_uri = process.env.redirect_uri
 const { SpotifyToken } = require('../models')
 
-const { default: axios } = require('axios')
+const axios = require('axios')
 const querystring = require('querystring')
+const t = 5
 const randomstring = require('randomstring')
 
 const Authorization = 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
 
 
 const requestAccess = async (code, grant_type, token) => {
-  //const form = []
   const authOptions = {
     method: 'POST',
     url: 'https://accounts.spotify.com/api/token',
@@ -50,17 +50,6 @@ const jwt = async (req, res, next) => {
   return next()
 }
 
-const login = async (req, res) => {
-  const state = randomstring.generate(16);
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id,
-      redirect_uri,
-      state
-  }));
-}
-
 const auth = async (req, res) => {
   if (req.token) {
     res.redirect('http://localhost:3000')
@@ -70,6 +59,17 @@ const auth = async (req, res) => {
     //console.log(req.query.code, 'Auth Function Else statement');
   }
 }
+const login = async (req, res) => {
+  const state = randomstring.generate(16);
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id:client_id,
+      redirect_uri: redirect_uri,
+      state: state
+  }));
+}
+
 
 
 module.exports = {
