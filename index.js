@@ -1,7 +1,15 @@
-const http = require("http");
-const app = require("./app/app");
-require("dotenv").config();
+require('dotenv').config()
 
-http.createServer(app).listen(process.env.PORT, () => {
-    console.log(`Server running on port: ${process.env.PORT}`)
-});
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const spotify = require('./middlewares/spotify')
+
+const app = express()
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cors())
+
+app.use('/spotify/v1', spotify)
+
+app.listen(process.env.PORT)

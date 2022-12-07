@@ -2,23 +2,23 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SpotifyTokens', {
+    await queryInterface.createTable('ASpotifyTokens', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      accessToken: {
+      access_token: {
         type: Sequelize.STRING
       },
-      tokenType: {
+      token_type: {
         type: Sequelize.STRING
       },
-      expiresIn: {
-        type: Sequelize.BIGINT
+      expires_in: {
+        type: Sequelize.INTEGER
       },
-      refreshToken: {
+      refresh_token: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -32,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SpotifyTokens');
+    await queryInterface.dropTable('ASpotifyTokens');
   }
 };

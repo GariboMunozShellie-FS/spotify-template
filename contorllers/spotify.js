@@ -2,7 +2,7 @@ require('dotenv').config
 const client_id = process.env.client_id
 const client_secret = process.env.client_secret
 const redirect_uri = process.env.redirect_uri
-const { SpotifyToken } = require('../models')
+const { ASpotifyToken } = require('../models')
 
 const axios = require('axios')
 const querystring = require('querystring')
@@ -13,15 +13,19 @@ const Authorization = 'Basic ' + (new Buffer.from(client_id + ':' + client_secre
 
 
 const requestAccess = async (code, grant_type, token) => {
-  const form = qs.stringify({ code, grant_type, redirect_uri })
+  const form = { code, grant_type, redirect_uri }
   const authOptions = {
-    method: 'POST',
-    url: 'https://accounts.spotify.com/api/token',
-    headers: { 
-      'Authorization': Authorization ,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form
+      method: 'POST',
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: grant_type
+      },
+      headers: {
+        'Authorization': Authorization,
+        'Content-Type': 'application/json'
+      },
   };
   return axios(authOptions)
   .then(({data}) => {
@@ -32,14 +36,13 @@ const requestAccess = async (code, grant_type, token) => {
 }
 
 const jwt = async (req, res, next) => {
-  req.token = await SpotifyToken.findOne({ where: {} })
-  
+  req.token = await ASpotifyToken.findOne({ where: {} })
   if (!req.token) {
     if (!req.query.code) { 
       return next() 
     }
     else if (req.query.code) { 
-      req.token = await requestAccess(req.query.code, 'authorization_code', SpotifyToken.build({}))
+      req.token = await requestAccess(req.query.code, 'authorization_code', ASpotifyToken.build({}))
       
   }
     else {
@@ -51,15 +54,14 @@ const jwt = async (req, res, next) => {
 }
 
 const auth = async (req, res) => {
-  //requestAccess()
   //console.log(req.query.code, 'Auth Function Else statement');
-  //res.send(`spotify auth code: ${req.query.code}`)
-    if (req.token) {
-      res.redirect('http://localhost:3000')
-    } else {
-      res.redirect('http://localhost:3001/spotify/v1/login')
-     
-    }
+  res.send(`spotify auth code: ${(req.token)}`)
+    //if (req.token) {
+    //  res.redirect('http://localhost:3000')
+    //} else {
+    //  res.redirect('http://localhost:3001/spotify/v1/login')
+    // 
+    //}
 }
 const login = async (req, res) => {
   const state = randomstring.generate(16);
