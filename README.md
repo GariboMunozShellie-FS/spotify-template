@@ -16,11 +16,14 @@ Port will be open on 3000 and 3001. Close any application that may be running on
 Before starting this project, a .env file is required. Create an the following variables for the following items below.
 
 ```Shell
-    fetch_URL:
-    DB_USER:
-    DB_PASSWORD:
-    DB_NAME:
-    DB_HOST:
+    DB_USER
+    DB_PASSWORD
+    DB_NAME
+    DB_HOST
+    client_id
+    client_secret
+    redirect_uri
+    PORT
 ```
 Once this is complete, you will need to have your node_modules install. Run the folloing line below.
 
