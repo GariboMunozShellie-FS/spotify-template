@@ -12,4 +12,4 @@ app.use(cors())
 
 app.use('/spotify/v1', spotify)
 
-app.listen(3001)
+app.listen(process.env.PORT)
