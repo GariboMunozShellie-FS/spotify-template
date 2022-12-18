@@ -1,0 +1,21 @@
+{% extends 'layouts/base.twig'%}
+
+{% block main_content %}
+    <h2> All Images: </h2>
+    <a href="images/new"> Create New Entry </a>
+    <ul>
+        {% for images in imageItem %}
+            <li>
+                {{ images.id }} - 
+                    <a href="/images/{{ images.id }}"> Edit </a> |
+                    <a href="/images/{{ images.id }}/delete"> Delete </a>
+            </li>
+            
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="/products">Products</a> |
+        <a href="/variants">Variants</a> 
+    </p>
+{% endblock %}
+
